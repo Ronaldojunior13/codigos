@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clique na Hora Certa</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #game-container {
+            width: 100%;
+            max-width: 400px;
+            height: 400px;
+            background-color: #ddd;
+            position: relative;
+        }
+        #player {
+            width: 20px;
+            height: 20px;
+            background-color: blue;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+        .obstacle {
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            position: absolute;
+        }
+        #score {
+            font-size: 24px;
+        }
+        #instructions {
+            margin-top: 20px;
+        }
+        #high-score {
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="player"></div>
+        <div id="score">Pontos: 0</div>
+        <div id="instructions">Clique na tela ou pressione a barra de espaço para começar!</div>
+        <div id="high-score">Pontuação Máxima: 0</div>
+    </div>
+    <script>
+        const gameContainer = document.getElementById("game-container");
+        const player = document.getElementById("player");
+        const scoreElement = document.getElementById("score");
+        const instructions = document.getElementById("instructions");
+        const highScoreElement = document.getElementById("high-score");
+        let isJumping = false;
+        let gameStarted = false;
+        let gameInterval;
+        let score = 0;
+
+        // Recupere a pontuação máxima do armazenamento local do navegador
+        let highScore = localStorage.getItem("highScore") || 0;
+
+        function startGame() {
+            if (!gameStarted) {
+                gameStarted = true;
+                instructions.style.display = "none";
+                gameInterval = setInterval(createObstacle, 1500);
+            }
+        }
+
+        function jump() {
+            if (gameStarted && !isJumping) {
+                isJumping = true;
+                let jumpHeight = 0;
+                const jumpInterval = setInterval(() => {
+                    jumpHeight += 10;
+                    player.style.bottom = jumpHeight + "px";
+                    if (jumpHeight >= 100) {
+                        clearInterval(jumpInterval);
+                        fall();
+                    }
+                }, 20);
+            }
+        }
+
+        function fall() {
+            let fallHeight = 100;
+            const fallInterval = setInterval(() => {
+                fallHeight -= 10;
+                player.style.bottom = fallHeight + "px";
+                if (fallHeight <= 0) {
+                    player.style.bottom = "0";
+                    isJumping = false;
+                    clearInterval(fallInterval);
+                }
+            }, 20);
+        }
+
+        function createObstacle() {
+            const obstacle = document.createElement("div");
+            obstacle.className = "obstacle";
+            gameContainer.appendChild(obstacle);
+            let obstaclePosition = 100;
+            obstacle.style.left = obstaclePosition + "px";
+            let obstacleInterval = setInterval(() => {
+                obstaclePosition -= 5;
+                obstacle.style.left = obstaclePosition + "px";
+                if (obstaclePosition < -20) {
+                    gameContainer.removeChild(obstacle);
+                    clearInterval(obstacleInterval);
+                }
+                if (obstaclePosition === 20 && isJumping) {
+                    score++;
+                    updateScore();
+                }
+                if (obstaclePosition === 20 && !isJumping) {
+                    gameOver();
+                }
+            }, 20);
+        }
+
+        function updateScore() {
+            scoreElement.textContent = "Pontos: " + score;
+
+            // Atualize a pontuação máxima se um novo recorde for alcançado
+            if (score > highScore) {
+                highScore = score;
+                highScoreElement.textContent = "Pontuação Máxima: " + highScore;
+                localStorage.setItem("highScore", highScore);
+            }
+        }
+
+        function gameOver() {
+            clearInterval(gameInterval);
+            alert("Você perdeu! Pontuação final: " + score + "\nTente novamente.");
+            location.reload();
+        }
+
+        // Exiba a pontuação máxima ao carregar a página
+        highScoreElement.textContent = "Pontuação Máxima: " + highScore;
+
+        gameContainer.addEventListener("click", startGame);
+        document.addEventListener("keydown", (event) => {
+            if (event.key === " ") {
+                startGame();
+                jump();
+            }
+        });
+    </script>
+</body>
+</html>
