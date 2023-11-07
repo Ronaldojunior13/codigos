@@ -57,6 +57,7 @@
             <p id="pergunta"></p>
             <input type="text" id="resposta" class="button">
             <button class="button" id="bt-enviar">Enviar</button>
+            <button class="button" id="bt-consequencia">Consequência</button>
         </div>
 
         <div id="respostas">
@@ -66,6 +67,7 @@
     </div>
 
     <script>
+        const btConsequencia = document.getElementById("bt-consequencia"); 
         const historias = document.getElementById("historias");
         const bt2 = document.getElementById("bt2");
         const btIniciar = document.getElementById("bt-iniciar");
@@ -81,7 +83,21 @@
             "Você gosta de esportes?",
             "você possui algum vicio?",
             "ja treinou um dia, e olhou-se no espelho e achou que estava forte",
+            "você ja viajou para o interior?",
+            "você joga algum tipo de jogo?",
+            "você ja foi zoado na escola?",
+            "você ja zuou alguém na escola",
+            "pratica academia?",
+            "você ja chorou por algum jogo de futebol?",
+            "ja tirou uma nota vermelha?",
+            "você já xingou algua"
 
+            
+        ];
+        const consequencias = [
+            "Dance uma música engraçada por 1 minuto.",
+            "Conte uma piada engraçada para todos.",
+            "Faça uma imitação de um animal por 30 segundos.",
             
         ];
 
@@ -128,6 +144,21 @@
             }
         }
 
+        
+        function escolherConsequencia() {
+            // Escolher uma consequência aleatória e exibi-la
+            const consequenciaIndex = Math.floor(Math.random() * consequencias.length);
+            const consequencia = consequencias[consequenciaIndex];
+            alert("Sua consequência: " + consequencia);
+
+            currentIndex++;
+            if (currentIndex < perguntas.length) {
+                mostrarPergunta();
+            } else {
+                exibirRespostas();
+            }
+        }
+
         function exibirRespostas() {
             perguntaDiv.style.display = "none";
             respostasDiv.style.display = "block";
@@ -137,9 +168,9 @@
                 li.textContent = `Pergunta ${index + 1}: ${perguntas[index]} - Resposta: ${resposta}`;
                 listaRespostas.appendChild(li);
             });
+            const btConsequencia = document.getElementById("bt-consequencia");
         }
     </script>
 
 </body>
 </html>
-
