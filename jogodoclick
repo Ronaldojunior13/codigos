@@ -44,10 +44,23 @@
         #high-score {
             font-size: 16px;
         }
+        .btn-container {
+            margin-top: 10px;
+        }
+        .btn {
+            font-size: 16px;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
-    <div id="game-container">
+    <div class="btn-container">
+        <button class="btn" id="mobile-btn">Mobile</button>
+        <button class="btn" id="pc-btn">PC</button>
+    </div>
+    <div id="game-container" style="display: none;">
         <div id="player"></div>
         <div id="score">Pontos: 0</div>
         <div id="instructions">Clique na tela ou pressione a barra de espaço para começar!</div>
@@ -67,12 +80,34 @@
         // Recupere a pontuação máxima do armazenamento local do navegador
         let highScore = localStorage.getItem("highScore") || 0;
 
-        function startGame() {
-            if (!gameStarted) {
-                gameStarted = true;
-                instructions.style.display = "none";
-                gameInterval = setInterval(createObstacle, 1500);
-            }
+        // Botão para escolher a versão "Mobile"
+        const mobileBtn = document.getElementById("mobile-btn");
+        mobileBtn.addEventListener("click", () => {
+            startGameMobile();
+        });
+
+        // Botão para escolher a versão "PC"
+        const pcBtn = document.getElementById("pc-btn");
+        pcBtn.addEventListener("click", () => {
+            startGamePC();
+        });
+
+        function startGameMobile() {
+            gameStarted = true;
+            gameContainer.style.display = "block";
+            mobileBtn.style.display = "none";
+            pcBtn.style.display = "none";
+            instructions.style.display = "none";
+            gameInterval = setInterval(createObstacle, 1500);
+        }
+
+        function startGamePC() {
+            gameStarted = true;
+            gameContainer.style.display = "block";
+            mobileBtn.style.display = "none";
+            pcBtn.style.display = "none";
+            instructions.style.display = "none";
+            gameInterval = setInterval(createObstacle, 1500);
         }
 
         function jump() {
@@ -89,6 +124,8 @@
                 }, 20);
             }
         }
+
+           
 
         function fall() {
             let fallHeight = 100;
@@ -147,10 +184,10 @@
         highScoreElement.textContent = "Pontuação Máxima: " + highScore;
 
         // Adicione um evento de toque (touch) para dispositivos móveis
-        gameContainer.addEventListener("click", startGame);
+        gameContainer.addEventListener("click", startGameMobile);
         document.addEventListener("keydown", (event) => {
             if (event.key === " ") {
-                startGame();
+                startGamePC();
                 jump();
             }
         });
