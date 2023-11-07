@@ -146,6 +146,7 @@
         // Exiba a pontuação máxima ao carregar a página
         highScoreElement.textContent = "Pontuação Máxima: " + highScore;
 
+        // Adicione um evento de toque (touch) para dispositivos móveis
         gameContainer.addEventListener("click", startGame);
         document.addEventListener("keydown", (event) => {
             if (event.key === " ") {
