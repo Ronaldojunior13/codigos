@@ -90,7 +90,7 @@
             "pratica academia?",
             "você ja chorou por algum jogo de futebol?",
             "ja tirou uma nota vermelha?",
-            "você já xingou algua"
+            "você já xingou alguma pessoa por trás?"
 
             
         ];
